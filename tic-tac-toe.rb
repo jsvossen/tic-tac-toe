@@ -22,46 +22,70 @@ class TicTacToe
 		puts "  |-----------|"
 	end
 
+	#row winning condition
 	def row_winner
-		winner = nil
+		win = nil
 		@@board.each do |row| 
 			@@players.each do |player|
 				winner = player if row.all? { |m| m == player.mark }
-				break if !winner.nil?
+				break if win
 			end
 		end
-		winner
+		win
 	end
 
-	# def column_winner
-	# 	winner = nil
-	# 	@@board.each do |row|
-	# 		row.each do |col| 
-	# 			@@players.each do |player|
-	# 				winner = player if row.all? { |m| m == player.mark }
-	# 				break if !winner.nil?
-	# 			end
-	# 		end
-	# 	end
-	# 	winner
-	# end
+	#column winning condition
+	def column_winner
+		win = nil
+		(0..@@board.size-1).each do |col|
+			column = []
+			(0..@@board.size-1).each do |row|
+				column << @@board[row][col].to_s
+			end
+			@@players.each do |player|
+				win = player if column.all? { |m| m == player.mark }
+				break if win
+			end
+		end
+		win
+	end
 
-	# def diag_right_winner
-	# 	[@@board[0][0], @@board[1][1], @@board[2][2]]
-	# end
+	#diag right (1,1 2,2 3,3) condition
+	def diag_right_winner
+		# win = nil
+		# (0..@@board.size-1).each do |col|
+		# 	diag = []
+		# 	(0..@@board.size-1).each do |row|
+		# 		shift = row.to_i+col.to_i
+		# 		diag << @@board[shift][col].to_s
+		# 	end
+		# 	@@players.each do |player|
+		# 		win = player if diag.all? { |m| m == player.mark }
+		# 		break if win
+		# 	end
+		# end
+		# win
+	end
 
-	# def diag_left_winner
-	# 	[@@board[0][2], @@board[1][1], @@board[2][0]]
-	# end
+	def diag_left_winner
+		# [@@board[0][2], @@board[1][1], @@board[2][0]]
+	end
+
+	def winner
+		row_winner || column_winner || diag_left_winner || diag_right_winner
+	end
 
 	#check if board is filled
-	 def game_over?
-	 	!@@board.any? { |row| row.include?(" ") } || !row_winner.nil?
-	 end
+	def board_full?
+		!@@board.any? { |row| row.include?(" ") }
+	end
+
+	def game_over?
+		board_full? || winner
+	end
 
 	#get moves from players until game is done
 	def play
-		puts row_winner
 		until game_over? do
 			@@players.each do |player|
 
@@ -83,7 +107,7 @@ class TicTacToe
 			end
 		end
 		puts "Game Over!"
-		@@board.each { |row| puts row_winner.name if !row_winner.nil? }
+		puts winner.name if winner
 	end
 
 	#check if input is valid coordinates
