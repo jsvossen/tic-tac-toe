@@ -22,15 +22,28 @@ class TicTacToe
 		puts "  |-----------|"
 	end
 
-	# def row_winner(row)
-	# 	@@board[row].all? do |i| 
-	# 		if i == players[0].mark return players[0]
-	# 		elsif i == players[1].mark return players[1]
-	# 	end
-	# end
+	def row_winner
+		winner = nil
+		@@board.each do |row| 
+			@@players.each do |player|
+				winner = player if row.all? { |m| m == player.mark }
+				break if !winner.nil?
+			end
+		end
+		winner
+	end
 
-	# def column_winner(col)
-	# 	[@@board[0][col], @@board[1][col], @@board[2][col]]
+	# def column_winner
+	# 	winner = nil
+	# 	@@board.each do |row|
+	# 		row.each do |col| 
+	# 			@@players.each do |player|
+	# 				winner = player if row.all? { |m| m == player.mark }
+	# 				break if !winner.nil?
+	# 			end
+	# 		end
+	# 	end
+	# 	winner
 	# end
 
 	# def diag_right_winner
@@ -43,11 +56,12 @@ class TicTacToe
 
 	#check if board is filled
 	 def game_over?
-	 	!@@board.any? { |row| row.include?(" ") }
+	 	!@@board.any? { |row| row.include?(" ") } || !row_winner.nil?
 	 end
 
 	#get moves from players until game is done
 	def play
+		puts row_winner
 		until game_over? do
 			@@players.each do |player|
 
@@ -69,6 +83,7 @@ class TicTacToe
 			end
 		end
 		puts "Game Over!"
+		@@board.each { |row| puts row_winner.name if !row_winner.nil? }
 	end
 
 	#check if input is valid coordinates
@@ -84,15 +99,12 @@ class TicTacToe
 
 	#player object
 	class Player
-
 		attr_accessor :name
 		attr_reader :mark
-
 		def initialize(name,mark)
 			@name = name
 			@mark = mark
 		end
-
 	end
 
 end
