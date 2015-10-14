@@ -37,9 +37,9 @@ class TicTacToe
 	#column winning condition
 	def column_winner
 		win = nil
-		(0..@@board.size-1).each do |col|
+		@@board.size.times do |col|
 			column = []
-			(0..@@board.size-1).each do |row|
+			@@board.size.times do |row|
 				column << @@board[row][col].to_s
 			end
 			@@players.each do |player|
@@ -52,27 +52,39 @@ class TicTacToe
 
 	#diag right (1,1 2,2 3,3) condition
 	def diag_right_winner
-		# win = nil
-		# (0..@@board.size-1).each do |col|
+		win = nil
+		# @@board.size.times do |col|
 		# 	diag = []
-		# 	(0..@@board.size-1).each do |row|
-		# 		shift = row.to_i+col.to_i
-		# 		diag << @@board[shift][col].to_s
+		# 	@@board.size.times do |row|
+		# 		diag << @@board[row+col][col].to_s if row+col < @@board.size
 		# 	end
 		# 	@@players.each do |player|
 		# 		win = player if diag.all? { |m| m == player.mark }
 		# 		break if win
 		# 	end
 		# end
-		# win
+		@@players.each do |player|
+			win = player if [@@board[0][0],@@board[1][1],@@board[2][2]].all? { |m| m == player.mark }
+			break if win
+		end
+		win
 	end
 
 	def diag_left_winner
-		# [@@board[0][2], @@board[1][1], @@board[2][0]]
+		win = nil
+		@@players.each do |player|
+			win = player if [@@board[0][2], @@board[1][1], @@board[2][0]].all? { |m| m == player.mark }
+			break if win
+		end
+		win
 	end
 
 	def winner
 		row_winner || column_winner || diag_left_winner || diag_right_winner
+	end
+
+	def is_draw?
+		board_full? && !winner
 	end
 
 	#check if board is filled
@@ -89,8 +101,8 @@ class TicTacToe
 		until game_over? do
 			@@players.each do |player|
 
-				draw_board
 				break if game_over?
+				draw_board
 
 				puts "#{player.name}'s turn:"
 				move = gets.chomp
@@ -106,8 +118,8 @@ class TicTacToe
 				
 			end
 		end
-		puts "Game Over!"
-		puts winner.name if winner
+		draw_board
+		puts is_draw? ? "It's a draw!" : "The winner is: #{winner.name}!"
 	end
 
 	#check if input is valid coordinates
