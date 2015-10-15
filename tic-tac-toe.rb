@@ -31,7 +31,7 @@ class TicTacToe
 		win = nil
 		@@board.each do |row| 
 			@@players.each do |player|
-				winner = player if row.all? { |m| m == player.mark }
+				win = player if row.all? { |m| m == player.mark }
 				break if win
 			end
 		end
