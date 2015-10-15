@@ -1,6 +1,6 @@
 class TicTacToe
 
-	@@board = [[" "," "," "],[" "," "," "],[" "," "," "]]
+	@@board = []
 	@@players = []
 
 	#init game with two players, X and O
@@ -8,6 +8,10 @@ class TicTacToe
 		@@players << @player_x = Player.new(player_x, "X")
 		@@players << @player_o = Player.new(player_o, "O")
 		play
+	end
+
+	def clean_board
+		@@board = [[" "," "," "],[" "," "," "],[" "," "," "]]
 	end
 
 	#draw the board grid
@@ -98,6 +102,7 @@ class TicTacToe
 
 	#get moves from players until game is done
 	def play
+		clean_board
 		until game_over? do
 			@@players.each do |player|
 
@@ -120,6 +125,7 @@ class TicTacToe
 		end
 		draw_board
 		puts is_draw? ? "It's a draw!" : "The winner is: #{winner.name}!"
+		play_again_check
 	end
 
 	#check if input is valid coordinates
@@ -131,6 +137,20 @@ class TicTacToe
 	def valid_move?(move)
 		move = move.split(",").collect! { |i| i.to_i-1 }
 		@@board[move[0]][move[1]] == " "
+	end
+
+	def play_again_check
+		puts "Would you like to play again?"
+		input = gets.chomp.downcase
+		if input != "no" && input != "n"
+			if input == "yes" || input == "y"
+				@@players.reverse!
+				play
+			else
+				puts "Respond yes or no"
+				play_again_check
+			end
+		end
 	end
 
 	#player object
